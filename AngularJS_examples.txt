@@ -1,0 +1,160 @@
+//Shopping List 
+
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+
+<div ng-app="myShoppingList" ng-controller="myCtrl">
+	<h3>My Shopping List</h3>
+	<ul>
+		<li ng-repeat="x in products">{{x}} <span ng-click="remove($index)">x</span>
+		</li>
+		
+	</ul>
+	<input placeholder = "Add Shopping items here" type="text" ng-model="addMe">
+	<button ng-click="addItem()">Add</button>
+	<p>{{errortext}}</p>
+</div>
+<script>
+	var app = angular.module('myShoppingList', []);
+	app.controller('myCtrl',function($scope){
+		$scope.products = ["Milk", "Bread", "Cheese"];
+		$scope.addItem = function(){
+			$scope.errortext="";
+			if (!$scope.addMe) return;
+			if ($scope.products.indexOf($scope.addMe) == -1){
+				$scope.products.push($scope.addMe);
+			}
+			else {
+				$scope.errortext = "The item is already in your shopping list.";
+			}
+		}
+		$scope.remove = function(index){
+			$scope.errortext="";
+			$scope.products.splice(index,1);
+		}
+	})
+</script>
+
+</body>
+</html>
+
+
+CSS Reference: https://www.w3schools.com/w3css/4/w3.css
+
+-------------------------------------------------------------------------------
+// My TO Do List
+
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body ng-app="myApp" ng-controller="myCtrl">
+	<h1>My ToDo List</h1>
+	<input placeholder="Add new" type="text" ng-model="event"> 
+	<button ng-click="add_new()">Add new</button>
+	<br>
+	
+	<div ng-repeat="x in list">
+		<input type="checkbox" ng-model="x.done"><span>{{x.text}}</span>
+	</div>
+	<br>
+	
+	<button ng-click="remove()">Remove marked</button>
+</body>
+
+<script>
+	var app = angular.module('myApp',[]);
+	app.controller('myCtrl',function($scope){
+		$scope.list = [{text:"housework", done:false}];
+		$scope.add_new = function(){
+			$scope.list.push({text: $scope.event, done: false});
+			$scope.event = "";
+		};
+		$scope.remove = function(){
+			var oldList = $scope.list;
+			$scope.list =[];
+			angular.forEach(oldList,function(x){
+				if(x.done == false) $scope.list.push(x);
+			});
+		};
+	});
+</script>
+</html>
+
+------------------------------------------------------------------------------------------
+// not finished
+
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body ng-app="myApp" ng-controller="myCtrl">
+
+<div>
+	<h3>Users</h3>
+	<table>
+		<tr>
+			<th>Edit</th>
+			<th>Fist Name</th>
+			<th>Last Name</th>
+		</tr>
+		<tr ng-repeat="user in names">
+			<td><button ng-click="Edit(user.id)">Edit</button></td>
+			<td>{{user.fName}}</td>
+			<td>{{user.lName}}</td>
+		</tr>
+	</table>
+	<button ng-click="Create_New()">Create New User</button>
+</div>
+
+
+<h3 ng-show="Display_Edit">Edit User</h3>
+<h3 ng-show="!Display_Edit">Create User</h3>
+<div ng-show = "Display_Edit">
+	<p>First Name:</p>
+	<input type="text" ng-model="FirstName" >
+	<br>
+	<p>Last Name:</p>
+	<input type="text" ng-model="LastName">
+	<br>
+	<p>Password:</p>
+	<input type="text" ng-model="Password">
+	<br>
+	<p>Repeat:</p>
+	<input type="text" ng-model="Repeat">
+	<br>
+	<button ng-click="Save_changes">Save Changes </button>
+</div>
+
+<script>
+	var app = angular.module('myApp',[]);
+	app.controller('myCtrl',function($scope){
+		$scope.visible = true;
+		$scope.Display_Edit = false;
+		$scope.names = [
+			{id:1, fName:'Hege', lName:"Pege" },
+			{id:2, fName:'Kim',  lName:"Pim" },
+			{id:3, fName:'Sal',  lName:"Smith" },
+			{id:4, fName:'Jack', lName:"Jones" },
+			{id:5, fName:'John', lName:"Doe" },
+			{id:6, fName:'Peter',lName:"Pan" }
+		]
+		$scope.FirstName = "";
+		$scope.LastName = "";
+		$scope.Password = "";
+		$scope.repeat = "";
+		$scope.Edit = function(id){
+			
+			$scope.Display_Edit = true;
+			$scope.FirstName = $scope.names[id-1].fName;
+			$scope.LastName = $scope.names[id-1].lName;
+		};
+		$scope.Create_New = function(){
+			$scope.Display_Edit = false;
+			
+		}
+	});
+</script>
+
+</body>
+</html>

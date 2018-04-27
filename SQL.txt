@@ -1,0 +1,220 @@
+SELECT - extracts data from a database
+UPDATE - updates data in a database
+DELETE - deletes data from a database
+INSERT INTO - inserts new data into a database
+CREATE DATABASE - creates a new database
+ALTER DATABASE - modifies a database
+CREATE TABLE - creates a new table
+ALTER TABLE - modifies a table
+DROP TABLE - deletes a table
+CREATE INDEX - creates an index (search key)
+DROP INDEX - deletes an index
+
+SELECT column1, column2, ... 
+FROM table name;
+
+SELECT Count(*) AS DistinctCountries 
+FROM (SELECT DISTINCT Country FROM Customers);
+
+//WHERE
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+
+SELECT * FROM Customers
+WHERE Country='Mexico';
+
+//AND
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition1 AND condition2 AND condition3 ...;
+
+//OR
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition1 OR condition2 OR condition3 ...;
+
+//NOT
+SELECT column1, column2, ...
+FROM table_name
+WHERE NOT condition;
+
+SELECT * FROM Customers
+WHERE NOT Country='Germany' AND NOT Country='USA';
+
+//ORDER BY
+SELECT column1, column2, ...
+FROM table_name
+ORDER BY column1, column2, ... ASC|DESC;
+
+SELECT * FROM Customers
+ORDER BY Country ASC, CustomerName DESC;
+
+//INSERT INTO (column1 matches value1)
+INSERT INTO table_name (column1, column2, column3, ...)
+VALUES (value1, value2, value3, ...);
+
+INSERT INTO Customers (CustomerName, City, Country)
+VALUES ('Cardinal', 'Stavanger', 'Norway');
+
+//Checking NULL or not
+SELECT column_names
+FROM table_name
+WHERE column_name IS (NOT) NULL;
+
+//UPDATE
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition;
+
+UPDATE Customers
+SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+WHERE CustomerID = 1;
+
+//DELETE
+DELETE FROM table_name
+WHERE condition;
+
+DELETE FROM Customers
+WHERE CustomerName='Alfreds Futterkiste';
+
+DELETE * FROM Customers
+
+//SELECT TOP (3 methods in SQL/MySQL/Oracle) only showing SQL
+SELECT TOP number|percent column_name(s)
+FROM table_name
+WHERE condition;
+
+//MIN,MAX
+SELECT MIN(column_name) (AS ...)
+FROM table_name
+WHERE condition;
+
+SELECT MIN(Price) AS SmallestPrice
+FROM Products;
+
+//COUNT,AVG,SUM
+SELECT COUNT/AVG/SUM(column_name)
+FROM table_name
+WHERE condition;
+
+SELECT AVG(Price)
+FROM Products;
+
+//LIKE (The LIKE operator is used in a WHERE clause to search for a specified pattern in a column.)
+SELECT column1, column2, ...
+FROM table_name
+WHERE columnN LIKE pattern;
+
+SELECT * FROM Customers
+WHERE City LIKE '[!a-c]%';
+
+//IN
+SELECT column_name(s)
+FROM table_name
+WHERE column_name IN (value1, value2, ...);
+
+SELECT * FROM Customers
+WHERE Country IN ('Germany', 'France', 'UK');
+
+//BETWEEN
+SELECT column_name(s)
+FROM table_name
+WHERE column_name BETWEEN value1 AND value2;
+
+SELECT * FROM Products
+WHERE (Price BETWEEN 10 AND 20)
+AND NOT CategoryID IN (1,2,3);
+
+SELECT * FROM Orders
+WHERE OrderDate BETWEEN #07/04/1996# AND #07/09/1996#;
+
+//Alias (see https://www.w3schools.com/sql/sql_alias.asp)
+SELECT column_name AS alias_name
+FROM table_name;
+
+//Inner Join
+SELECT (output_columns)
+FROM (table_1)
+INNER JOIN (table_2) ON (table1.column_name) = (table2.column_name);
+
+!(triple inner join)
+SELECT Orders.OrderID, Customers.CustomerName, Shippers.ShipperName
+FROM ((Orders
+INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID)
+INNER JOIN Shippers ON Orders.ShipperID = Shippers.ShipperID);
+
+//Left Join (Difference: returns all records from table_1 and NULL for no matched values)
+SELECT (output_columns)
+FROM (table_1)
+LEFT JOIN (table_2) ON (table1.column_name) = (table2.column_name);
+
+//Right Join (inverse of Left join)
+
+//Full Join (returns all recods from both table_1 and table_2, Null for no matched values)
+
+//Self Join
+SELECT column_name(s)
+FROM table1 T1, table1 T2
+WHERE condition;
+
+!!! SELECT A.CustomerName AS CustomerName1, B.CustomerName AS CustomerName2, A.City
+FROM Customers A, Customers B
+WHERE A.CustomerID <> B.CustomerID
+AND A.City = B.City 
+ORDER BY A.City;
+
+//Union (have to be in same order) (by default: only union distinct ones. use UNION ALL to union all of the records)
+SELECT column_name(s) FROM table1
+UNION
+SELECT column_name(s) FROM table2;
+
+//GROUP BY (usually used with COUNT, SUM, AVE MAX, MIN)
+SELECT column_name(s)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+ORDER BY column_name(s);
+
+SELECT COUNT(CustomerID), Country
+FROM Customers
+GROUP BY Country
+ORDER BY COUNT(CustomerID) DESC;
+
+//HAVING (similer to WHERE: used for decide condition of aggregate function)
+SELECT column_name(s)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+HAVING condition
+ORDER BY column_name(s);
+
+SELECT COUNT(CustomerID), Country
+FROM Customers
+GROUP BY Country
+HAVING COUNT(CustomerID) > 5
+ORDER BY COUNT(CustomerID) DESC;
+
+//EXIT (https://www.w3schools.com/sql/sql_exists.asp)
+*The EXISTS operator is used to test for the existence of any record in a subquery.
+*The EXISTS operator returns true if the subquery returns one or more records.
+SELECT column_name(s)
+FROM table_name
+WHERE EXISTS
+(SELECT column_name FROM table_name WHERE condition);
+
+//ANY & ALL
+SELECT column_name(s)
+FROM table_name
+WHERE column_name operator ANY/ALL
+(SELECT column_name FROM table_name WHERE condition);
+
+The ANY and ALL operators are used with a WHERE or HAVING clause.
+The ANY operator returns true if any of the subquery values meet the condition.
+The ALL operator returns true if all of the subquery values meet the condition.
+
+//SELECT INTO (select some columns into a new table)
+SELECT column1, column2, column3, ...
+INTO newtable [IN externaldb]
+FROM oldtable
+WHERE condition;
